@@ -206,6 +206,27 @@ namespace BSTWebApp.Models
             return current.Valor;
         }
 
+        public void Balancear()
+        {
+            List<T> valores = InOrden();
+            Raiz = BalancearRecursivo(valores, 0, valores.Count - 1);
+        }
+
+        private Nodo<T> BalancearRecursivo(List<T> valores, int inicio, int fin)
+        {
+            if (inicio > fin)
+            {
+                return null;
+            }
+
+            int medio = (inicio + fin) / 2;
+            Nodo<T> nodo = new Nodo<T>(valores[medio]);
+
+            nodo.Izquierdo = BalancearRecursivo(valores, inicio, medio - 1);
+            nodo.Derecho = BalancearRecursivo(valores, medio + 1, fin);
+
+            return nodo;
+        }
 
 
     }

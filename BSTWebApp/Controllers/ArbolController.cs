@@ -78,19 +78,47 @@ namespace BSTWebApp.Controllers
             return View("Index");
         }
 
+        [HttpPost]
+        public ActionResult Balancear()
+        {
+            arbol.Balancear();
+            return RedirectToAction("Index", new { mensaje = "Se ha balanceado el árbol correctamente." });
+        }
+
         // Método para obtener los recorridos del árbol
         private Dictionary<string, List<string>> ObtenerRecorridos()
         {
             var inOrden = arbol.InOrden();
             var preOrden = arbol.PreOrden();
             var postOrden = arbol.PostOrden();
+            var porNiveles = arbol.RecorridoPorNiveles();
 
             return new Dictionary<string, List<string>>()
      {
          { "InOrden", inOrden.ConvertAll(n => n.ToString()) },
          { "PreOrden", preOrden.ConvertAll(n => n.ToString()) },
          { "PostOrden", postOrden.ConvertAll(n => n.ToString()) },
+         { "Por Niveles", porNiveles.ConvertAll(n => n.ToString()) }
      };
+        }
+
+        private object ObtenerDatosDelNodo(Nodo<int> nodo)
+        {
+            if (nodo == null) return null;
+
+            return new
+            {
+                valor = nodo.Valor,
+                izquierdo = ObtenerDatosDelNodo(nodo.Izquierdo),
+                derecho = ObtenerDatosDelNodo(nodo.Derecho)
+            };
+        }
+
+
+        public JsonResult ObtenerArbol()
+        {
+            var datos = ObtenerDatosDelNodo(arbol.Raiz);
+            return Json(datos, JsonRequestBehavior.AllowGet);
         }
 
     }

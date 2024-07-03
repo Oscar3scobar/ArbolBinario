@@ -88,6 +88,101 @@
                         <button type="submit" class="btn btn-light mt-2">Obtener Máximo</button>
                     </form>
                 </div>
+                <!-- Formulario para balancear el árbol -->
+                <form action="@Url.Action("Balancear", "Arbol")" method="post">
+                    <button type="submit" class="btn btn-light mt-4">Balancear Árbol</button>
+                </form>
+                <div class="col-md-6">
 
+                    <!-- Recorridos del árbol -->
+                    <div class="mb-4">
+                        <h4 class="form-title">Recorridos</h4>
+                        @if (ViewBag.Records != null)
+                        {
+                            <div class="mt-3">
+                                <div class="form-group">
+                                    <label for="inOrden">InOrden:</label>
+                                    <input type="text" id="inOrden" name="inOrden" class="form-control" value="@string.Join(", ", ViewBag.Records["InOrden"])" readonly />
+                                </div>
+                                <div class="form-group">
+                                    <label for="preOrden">PreOrden:</label>
+                                    <input type="text" id="preOrden" name="preOrden" class="form-control" value="@string.Join(", ", ViewBag.Records["PreOrden"])" readonly />
+                                </div>
+                                <div class="form-group">
+                                    <label for="postOrden">PostOrden:</label>
+                                    <input type="text" id="postOrden" name="postOrden" class="form-control" value="@string.Join(", ", ViewBag.Records["PostOrden"])" readonly />
+                                </div>
+                                <div class="form-group">
+                                    <label for="porNiveles">Por Niveles:</label>
+                                    <input type="text" id="porNiveles" name="porNiveles" class="form-control" value="@string.Join(", ", ViewBag.Records["Por Niveles"])" readonly />
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <!-- Canvas para dibujar el árbol binario -->
+                    <div class="text-center mt-4">
+                        <canvas id="arbolCanvas" width="800" height="600"></canvas>
+                    </div>
+                    <!-- Bootstrap y Scripts -->
+                    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+                    <script>
+    // Funciones de dibujo del árbol
+    function DrawnTree() {
+        fetch('/Arbol/ObtenerArbol')
+            .then(response => response.json())
+            .then(data => {
+                var canvas = document.getElementById('arbolCanvas');
+
+                var ctx = canvas.getContext('2d');
+                if (!ctx) {
+                    console.error('El contexto 2D del canvas no está disponible.');
+                    return;
+                }
+
+                ctx.clearRect(0, 0, canvas.width, canvas.height); // Limpiar el canvas
+                if (data) {
+                    dibujarNodo(ctx, data, canvas.width / 2, 80, canvas.width / 4); // Ajuste de posición inicial y offset
+                }
+            })
+            .catch(error => {
+                console.error('Error al obtener o procesar datos para dibujar el árbol:', error);
+            });
+    }
+
+    function dibujarNodo(ctx, nodo, x, y, offset) {
+        if (nodo === null) return;
+
+        // Dibujar el círculo del nodo
+        ctx.beginPath();
+        ctx.arc(x, y, 30, 0, 2 * Math.PI);
+        ctx.stroke();
+
+        // Escribir el valor del nodo dentro del círculo
+        ctx.font = '20px Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(nodo.valor.toString(), x, y);
+
+        // Dibujar líneas y conectar con nodos hijos
+        if (nodo.izquierdo) {
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            ctx.lineTo(x - offset, y + 50);
+            ctx.stroke();
+            dibujarNodo(ctx, nodo.izquierdo, x - offset, y + 50, offset / 2);
+        }
+        if (nodo.derecho) {
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            ctx.lineTo(x + offset, y + 50);
+            ctx.stroke();
+            dibujarNodo(ctx, nodo.derecho, x + offset, y + 50, offset / 2);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        DrawnTree();
+    });
+                    </script>
 </body>
 </html>
