@@ -54,9 +54,19 @@
                         </div>
                         <button type="submit" class="btn btn-light">Insertar</button>
                     </form>
+                    <!-- Formulario para buscar número -->
+                    <h4 class="form-title mt-4">Buscar</h4>
+                    <form action="@Url.Action("Buscar", "Arbol")" method="post">
+                        <div class="form-group">
+                            <label for="numeroBuscar">Número:</label>
+                            <input type="number" id="numeroBuscar" name="numero" class="form-control" required />
+                        </div>
+                        <button type="submit" class="btn btn-light">Buscar</button>
+                    </form>
 
-                   
-    </div>
+
+
+                </div>
 
 </body>
 </html>

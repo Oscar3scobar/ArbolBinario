@@ -52,5 +52,94 @@ namespace BSTWebApp.Models
             return nodo;
         }
 
+        public Nodo<T> Buscar(T valor)
+        {
+            return BuscarRecursivo(Raiz, valor);
+        }
+
+        private Nodo<T> BuscarRecursivo(Nodo<T> nodo, T valor)
+        {
+            if (nodo == null || nodo.Valor.CompareTo(valor) == 0)
+            {
+                return nodo;
+            }
+
+            if (valor.CompareTo(nodo.Valor) < 0)
+            {
+                return BuscarRecursivo(nodo.Izquierdo, valor);
+            }
+            else
+            {
+                return BuscarRecursivo(nodo.Derecho, valor);
+            }
+        }
+
+
+        public List<T> InOrden()
+        {
+            List<T> result = new List<T>();
+            InOrden(Raiz, result);
+            return result;
+        }
+
+        private void InOrden(Nodo<T> nodo, List<T> result)
+        {
+            if (nodo == null) return;
+            InOrden(nodo.Izquierdo, result);
+            result.Add(nodo.Valor);
+            InOrden(nodo.Derecho, result);
+        }
+
+        public List<T> PreOrden()
+        {
+            List<T> result = new List<T>();
+            PreOrden(Raiz, result);
+            return result;
+        }
+
+        private void PreOrden(Nodo<T> nodo, List<T> result)
+        {
+            if (nodo == null) return;
+            result.Add(nodo.Valor);
+            PreOrden(nodo.Izquierdo, result);
+            PreOrden(nodo.Derecho, result);
+        }
+
+        public List<T> PostOrden()
+        {
+            List<T> result = new List<T>();
+            PostOrden(Raiz, result);
+            return result;
+        }
+
+        private void PostOrden(Nodo<T> nodo, List<T> result)
+        {
+            if (nodo == null) return;
+            PostOrden(nodo.Izquierdo, result);
+            PostOrden(nodo.Derecho, result);
+            result.Add(nodo.Valor);
+        }
+        public T Maximo()
+        {
+            if (Raiz == null) throw new InvalidOperationException("El árbol está vacío.");
+            Nodo<T> current = Raiz;
+            while (current.Derecho != null)
+            {
+                current = current.Derecho;
+            }
+            return current.Valor;
+        }
+
+        public T Minimo()
+        {
+            if (Raiz == null) throw new InvalidOperationException("El árbol está vacío.");
+            Nodo<T> current = Raiz;
+            while (current.Izquierdo != null)
+            {
+                current = current.Izquierdo;
+            }
+            return current.Valor;
+        }
+
     }
 }
