@@ -45,6 +45,21 @@ namespace BSTWebApp.Controllers
             ViewBag.Maximo = arbol.Raiz != null ? arbol.Maximo().ToString() : "Árbol vacío";
             return View("Index");
         }
+
+        [HttpPost]
+        public ActionResult Eliminar(int numero)
+        {
+            var encontrado = arbol.Buscar(numero);
+            if (encontrado == null)
+            {
+                return RedirectToAction("Index", new { mensaje = $"No se encontró el número {numero} para eliminar." });
+            }
+
+            arbol.Eliminar(numero);
+
+            return RedirectToAction("Index", new { mensaje = $"Se ha eliminado el número {numero}." });
+        }
+
         [HttpPost]
         public ActionResult ObtenerMinimo()
         {

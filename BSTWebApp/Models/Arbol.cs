@@ -73,6 +73,53 @@ namespace BSTWebApp.Models
                 return BuscarRecursivo(nodo.Derecho, valor);
             }
         }
+        public void Eliminar(T valor)
+        {
+            Raiz = EliminarRecursivo(Raiz, valor);
+        }
+
+        private Nodo<T> EliminarRecursivo(Nodo<T> nodo, T valor)
+        {
+            if (nodo == null) return nodo;
+
+            if (valor.CompareTo(nodo.Valor) < 0)
+            {
+                nodo.Izquierdo = EliminarRecursivo(nodo.Izquierdo, valor);
+            }
+            else if (valor.CompareTo(nodo.Valor) > 0)
+            {
+                nodo.Derecho = EliminarRecursivo(nodo.Derecho, valor);
+            }
+            else
+            {
+                if (nodo.Izquierdo == null)
+                {
+                    return nodo.Derecho;
+                }
+                else if (nodo.Derecho == null)
+                {
+                    return nodo.Izquierdo;
+                }
+
+                nodo.Valor = MinValor(nodo.Derecho);
+                nodo.Derecho = EliminarRecursivo(nodo.Derecho, nodo.Valor);
+            }
+
+            return nodo;
+        }
+
+        private T MinValor(Nodo<T> nodo)
+        {
+            T minv = nodo.Valor;
+            while (nodo.Izquierdo != null)
+            {
+                minv = nodo.Izquierdo.Valor;
+                nodo = nodo.Izquierdo;
+            }
+            return minv;
+        }
+
+
 
 
         public List<T> InOrden()
@@ -119,6 +166,24 @@ namespace BSTWebApp.Models
             PostOrden(nodo.Derecho, result);
             result.Add(nodo.Valor);
         }
+        public List<T> RecorridoPorNiveles()
+        {
+            List<T> result = new List<T>();
+            Queue<Nodo<T>> queue = new Queue<Nodo<T>>();
+            if (Raiz != null) queue.Enqueue(Raiz);
+
+            while (queue.Count > 0)
+            {
+                Nodo<T> current = queue.Dequeue();
+                result.Add(current.Valor);
+
+                if (current.Izquierdo != null) queue.Enqueue(current.Izquierdo);
+                if (current.Derecho != null) queue.Enqueue(current.Derecho);
+            }
+
+            return result;
+        }
+
         public T Maximo()
         {
             if (Raiz == null) throw new InvalidOperationException("El árbol está vacío.");
@@ -140,6 +205,8 @@ namespace BSTWebApp.Models
             }
             return current.Valor;
         }
+
+
 
     }
 }

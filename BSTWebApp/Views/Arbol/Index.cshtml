@@ -42,7 +42,14 @@
                 <div class="form-group">
                     <input type="text" id="mensajeAccion" class="form-control" readonly value="@ViewBag.Mensaje" />
                 </div>
-
+                <!-- Mostrar valor mínimo o máximo -->
+                @if (ViewBag.MinMaxValue != null)
+                {
+                    <div class="text-center mb-4">
+                        <h5>@ViewBag.MinMaxTitle:</h5>
+                        <input type="text" class="form-control" value="@ViewBag.MinMaxValue" readonly />
+                    </div>
+                }
 
                 <!-- Formulario para insertar número -->
                 <div class="mb-4">
@@ -63,9 +70,23 @@
                         </div>
                         <button type="submit" class="btn btn-light">Buscar</button>
                     </form>
+                    <!-- Formulario para eliminar número -->
+                    <h4 class="form-title mt-4">Eliminar</h4>
+                    <form action="@Url.Action("Eliminar", "Arbol")" method="post">
+                        <div class="form-group">
+                            <label for="numeroEliminar">Número:</label>
+                            <input type="number" id="numeroEliminar" name="numero" class="form-control" required />
+                        </div>
+                        <button type="submit" class="btn btn-light">Eliminar</button>
+                    </form>
 
-
-
+                    <!-- Botones para obtener mínimo y máximo -->
+                    <form action="@Url.Action("ObtenerMinimo", "Arbol")" method="post">
+                        <button type="submit" class="btn btn-light mt-2">Obtener Mínimo</button>
+                    </form>
+                    <form action="@Url.Action("ObtenerMaximo", "Arbol")" method="post">
+                        <button type="submit" class="btn btn-light mt-2">Obtener Máximo</button>
+                    </form>
                 </div>
 
 </body>
